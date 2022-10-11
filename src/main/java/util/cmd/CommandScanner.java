@@ -2,6 +2,7 @@ package util.cmd;
 
 import java.io.InputStream;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class CommandScanner {
 
@@ -23,6 +24,6 @@ public class CommandScanner {
     public Command nextCommand() {
         String line = scanner.nextLine();
         String[] arr = line.split(" ", 2);
-        return new Command(arr[0], arr[1].split(" "));
+        return new Command(arr[0], arr[1] == null? new String[0] : arr[1].split(" "));
     }
 }
