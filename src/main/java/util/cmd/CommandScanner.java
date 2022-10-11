@@ -2,7 +2,6 @@ package util.cmd;
 
 import java.io.InputStream;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 public class CommandScanner {
 
@@ -10,6 +9,10 @@ public class CommandScanner {
 
     public CommandScanner(InputStream inputStream) {
         scanner = new Scanner(inputStream);
+    }
+
+    public CommandScanner(String input) {
+        scanner = new Scanner(input);
     }
 
     public boolean hasNext() {
