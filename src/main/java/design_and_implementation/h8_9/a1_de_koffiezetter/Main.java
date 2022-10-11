@@ -1,4 +1,4 @@
-package DesignAndImplementation.h8_9.a1_De_koffiezetter;
+package design_and_implementation.h8_9.a1_de_koffiezetter;
 
 public class Main {
     public static void main(String[] args) {
