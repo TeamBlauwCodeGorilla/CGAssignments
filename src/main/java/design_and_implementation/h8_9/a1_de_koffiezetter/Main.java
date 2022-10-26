@@ -1,24 +1,26 @@
 package design_and_implementation.h8_9.a1_de_koffiezetter;
 
+import design_and_implementation.h8_9.a1_de_koffiezetter.machines.CoffeeMachine;
+import design_and_implementation.h8_9.a1_de_koffiezetter.machines.DouweEgbertsMachine;
+import design_and_implementation.h8_9.a1_de_koffiezetter.machines.NescafeMachine;
 import util.cmd.Command;
 import util.cmd.CommandScanner;
-
-import java.io.ByteArrayInputStream;
-import java.io.StringReader;
-import java.util.Scanner;
 
 public class Main {
 
     private static final String input = """
             status
+            select machine nescafe
             zet aan
             status
-            select cappucino
+            toon prijzen
+            select keuze cappucino
             toon selectie
             select koffie
             toon selectie
-            toon prijzen
             """;
+
+    private static CoffeeMachine coffeeMachine;
 
     public static void main(String[] args) {
         //TODO: Implement the assignment: 'De koffiezetter' using inheritance and abstraction of classes and interfaces.
@@ -29,25 +31,55 @@ public class Main {
             Command next = scanner.nextCommand();
             System.out.println(next);
 
-            if (next.getLabel().equals("status")) {
+            if (next.getLabel().equals(Locale.GENERIC_CMD_STATUS.msg())) {
                 //TODO: Toon of de machine aan of uit staat.
-            } else if (next.getLabel().equals("zet")) {
+                if (coffeeMachine == null) {
+                    Locale.MACHINE_MISSING.print();
+                } else {
+                    Locale.MACHINE_INFO_POWER.print(coffeeMachine.isPowered()? Locale.GENERIC_ON : Locale.GENERIC_OFF);
+                }
+            } else if (next.getLabel().equals(Locale.GENERIC_CMD_SET.msg())) {
                 if (next.getArguments().length > 0) {
-                    if (next.getArguments()[0].equals("aan")) {
-                        //TODO: Zet machine aan.
-                    } else if (next.getArguments()[0].equals("uit")) {
-                        //TODO: Zet machine uit.
+                    if (coffeeMachine == null) {
+                        Locale.MACHINE_MISSING.print();
+                    } else {
+                        if (next.getArguments()[0].equals(Locale.GENERIC_ON.msg())) {
+                            coffeeMachine.turnOn();
+                            Locale.MACHINE_UPDATE_POWER.print(Locale.GENERIC_ON.msg());
+                        } else if (next.getArguments()[0].equals(Locale.GENERIC_OFF.msg())) {
+                            coffeeMachine.turnOff();
+                            Locale.MACHINE_UPDATE_POWER.print(Locale.GENERIC_OFF.msg());
+                        }
                     }
                 }
-            } else if (next.getLabel().equals("select")) {
-                if (next.getArguments().length > 0) {
+            } else if (next.getLabel().equals(Locale.GENERIC_CMD_SELECT.msg())) {
+                if (next.getArguments().length > 1) {
                     if (next.getArguments()[0].equals("machine")) {
-                        //TODO: Selecteer een machine.
+                        //TODO: Save coffee machines so a second one of the same machine doesn't get instantiated.
+                        if (next.getArguments()[1].equals("nescafe")) {
+                            coffeeMachine = new NescafeMachine();
+                        } else if (next.getArguments()[1].equals("Douwe Egberts")) {
+                            coffeeMachine = new DouweEgbertsMachine();
+                        }
                     } else if (next.getArguments()[0].equals("keuze")) {
-                        //TODO: Selecteer een optie van de machine.
+                        if (coffeeMachine == null) {
+                            Locale.MACHINE_MISSING.print();
+                        } else {
+                            //TODO: Selecteer een optie van de machine.
+                            int slot;
+                            try {
+                                slot = Integer.parseInt(next.getArguments()[1]);
+                            } catch (Exception ignored) {
+                                coffeeMachine.selectSlot(next.getArguments()[1]);
+                                Locale.MACHINE_MISSING_ITEM.print(next.getArguments()[1]);
+                                continue;
+                            }
+
+                            coffeeMachine.selectSlot(slot);
+                        }
                     }
                 }
-            } else if (next.getLabel().equals("toon")) {
+            } else if (next.getLabel().equals(Locale.GENERIC_CMD_SHOW.msg())) {
                 if (next.getArguments().length > 0) {
                     if (next.getArguments()[0].equals("selectie")) {
                         //TODO: Toon de geselecteerde optie van de machine.
