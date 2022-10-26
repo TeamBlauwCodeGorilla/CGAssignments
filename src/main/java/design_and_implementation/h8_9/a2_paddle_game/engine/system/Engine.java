@@ -7,6 +7,7 @@ import design_and_implementation.h8_9.a2_paddle_game.engine.system.GamePanel;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.awt.*;
 import java.net.URL;
 import java.util.List;
 
@@ -14,17 +15,17 @@ public class Engine {
 
     private final JFrame window;
     private final GamePanel gamePanel;
-    public static boolean isRunning() {
-        return GamePanel.isRunning();
-    }
 
-    public Engine() {
+    public Engine(Dimension resolution) {
+        this(resolution.width, resolution.height);
+    }
+    public Engine(int width, int height) {
         window = new JFrame();
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setResizable(false);
         window.setTitle("Paddle Game - Breakout");
 
-        gamePanel = new GamePanel(16, 12);
+        gamePanel = new GamePanel(width, height);
         window.add(gamePanel);
 
         window.pack();
@@ -41,8 +42,8 @@ public class Engine {
         return gamePanel.gameObjects;
     }
 
-    public int getFrameRate() {
-        return gamePanel.getFrameRate();
+    public static int getFrameRate() {
+        return GamePanel.getFrameRate();
     }
 
     public void setFrameRate(int frameRate) {
@@ -51,5 +52,9 @@ public class Engine {
 
     public @NotNull Sprite createSprite(@NotNull URL url) {
         return ResourceManager.getInstance().getSprite(url);
+    }
+
+    public static boolean isRunning() {
+        return GamePanel.isRunning();
     }
 }

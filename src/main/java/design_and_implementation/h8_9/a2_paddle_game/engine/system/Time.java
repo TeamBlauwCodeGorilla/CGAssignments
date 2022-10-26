@@ -6,11 +6,8 @@ import java.time.temporal.ChronoUnit;
 public class Time {
 
     static Instant startup;
-    static double lastFrameTime, lastFixedFrameTime;
+    static float lastFrameTime, lastFixedFrameTime;
     static double deltaTime, fixedDeltaTime;
-
-    Instant lastFrame, lastFixedFrame;
-
     long framesElapsed;
     static long fps;
 
@@ -20,20 +17,22 @@ public class Time {
 
     public void reset() {
         startup = Instant.now();
-        lastFrame = Instant.now();
-        lastFixedFrame = Instant.now();
         framesElapsed = 0;
         fps = 60;
         lastFrameTime = 0;
         lastFixedFrameTime = 0;
     }
 
-    static double getTime() {
-        return 0.000000001 * ChronoUnit.NANOS.between(startup, Instant.now());
+    /**
+     * Get the time elapsed since the program has started in millis.
+     * @return The amount of milliseconds elapsed since the beginning of the program
+     */
+    static float getTime() {
+        return (float) (0.001 * ChronoUnit.MICROS.between(startup, Instant.now()));
     }
 
     void calcDeltaTime() {
-        double startTime = getTime();
+        float startTime = getTime();
         deltaTime = startTime - lastFrameTime;
         lastFrameTime = startTime;
 
@@ -41,7 +40,7 @@ public class Time {
     }
 
     void calcFixedDeltaTime() {
-        double startTime = getTime();
+        float startTime = getTime();
         fixedDeltaTime = startTime - lastFixedFrameTime;
         lastFixedFrameTime = startTime;
 

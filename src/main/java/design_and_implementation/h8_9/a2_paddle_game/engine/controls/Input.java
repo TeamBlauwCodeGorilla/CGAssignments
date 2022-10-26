@@ -44,7 +44,7 @@ public class Input implements KeyListener {
     }
 
     public static float getVertical() {
-        return -active.getOrDefault(getKeyMapping(InputKey.KEY_DOWN), 0.0f) + active.getOrDefault(getKeyMapping(InputKey.KEY_UP), 0.0f);
+        return -active.getOrDefault(getKeyMapping(InputKey.KEY_UP), 0.0f) + active.getOrDefault(getKeyMapping(InputKey.KEY_DOWN), 0.0f);
     }
 
     public static boolean isPressed(int keyCode) {

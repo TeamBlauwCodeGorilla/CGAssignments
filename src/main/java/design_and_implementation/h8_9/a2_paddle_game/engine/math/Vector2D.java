@@ -88,9 +88,6 @@ public class Vector2D implements Cloneable {
 
     @Override
     public String toString() {
-        return "Vector2D{" +
-                "x=" + x +
-                ", y=" + y +
-                '}';
+        return "[x:" + x + ", y:" + y +"]";
     }
 }

@@ -13,21 +13,20 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class GamePanel extends JPanel implements Runnable {
-
-    final int unitSize;
-    final int scale;
-    final int tileSize;
-    final int maxScreenCols, maxScreenRows;
+    final Dimension screenResolution;
 
     final Time time;
 
     final Input input;
     Thread gameThread;
 
-    private int frameRate;
+    private static int frameRate;
+    private static final int MAX_FRAME_SKIP = 5;
 
     private static boolean running = false;
     public static boolean isRunning() {
@@ -38,18 +37,8 @@ public class GamePanel extends JPanel implements Runnable {
 
     public final List<GameObject> gameObjects = new ArrayList<>();
 
-    public GamePanel(int cols, int rows) {
-        this(cols, rows, 16, 3);
-    }
-
-    public GamePanel(int cols, int rows, int unitSize, int scale) {
-        this.unitSize = unitSize;
-        this.scale = scale;
-        this.tileSize = unitSize * scale;
-        this.maxScreenCols = cols;
-        this.maxScreenRows = rows;
-
-        Dimension screenResolution = new Dimension(tileSize * maxScreenCols, tileSize * maxScreenRows);
+    public GamePanel(int width, int height) {
+        screenResolution = new Dimension(width, height);
         this.setPreferredSize(screenResolution);
         this.setBackground(Color.GRAY);
         this.setDoubleBuffered(true);
@@ -59,7 +48,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.addKeyListener(input);
         this.setFocusable(true);
 
-        this.frameRate = -1;
+        setFrameRate(-1);
     }
 
     public void startGameThread() {
@@ -71,6 +60,12 @@ public class GamePanel extends JPanel implements Runnable {
     public void run() {
         running = true;
         time.reset();
+
+        if (frameRate == 0) {
+            frameRate = Screen.getMonitorRefreshRate();
+        }
+        int skipTicks = 1000 / frameRate;
+
         for (GameObject gameObject : gameObjects) {
             if (gameObject.isEnabled()) {
                 for (Component component : gameObject.getComponents()) {
@@ -79,18 +74,15 @@ public class GamePanel extends JPanel implements Runnable {
             }
         }
 
+        float nextGameTick = Time.getTime();
         while (gameThread != null) {
 
-            if (frameRate != -1 && time.framesElapsed >= frameRate) {
-                if (ChronoUnit.MILLIS.between(time.lastFixedFrame, Instant.now()) < 1000) {
-                    continue;
-                }
-            }
+            int iteration = 0;
+            while( Time.getTime() > nextGameTick && iteration < MAX_FRAME_SKIP) {
+                update();
 
-            if (ChronoUnit.MILLIS.between(time.lastFixedFrame, Instant.now()) >= 1000) {
-                fixedUpdate();
-            } else {
-                update(false);
+                nextGameTick += skipTicks;
+                iteration++;
             }
 
             super.repaint();
@@ -98,28 +90,28 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     private void fixedUpdate() {
-        time.lastFixedFrame = Instant.now();
         time.calcFixedDeltaTime();
 
-        if (frameRate == 0) {
-            frameRate = getMonitorRefreshRate();
-        }
+        List<GameObject> orderedHierarchy = getOrderedHierarchy();
 
-        update(true);
+        for (GameObject gameObject : orderedHierarchy) {
+            for (Component scriptComponent : gameObject.getComponents()) {
+                scriptComponent.onFixedUpdate();
+            }
+        }
     }
 
-    private void update(boolean fixed) {
-        time.lastFrame = Instant.now();
+    private void update() {
+        float elapsed = Time.getTime() - Time.lastFixedFrameTime;
+        if (elapsed >= 1000) {
+            fixedUpdate();
+        }
         time.calcDeltaTime();
 
-        List<GameObject> hierarchyRoot = getHierarchyRoot();
-        hierarchyRoot.sort(Collections.reverseOrder());
+        List<GameObject> orderedHierarchy = getOrderedHierarchy();
 
-        for (GameObject gameObject : hierarchyRoot) {
+        for (GameObject gameObject : orderedHierarchy) {
             for (Component scriptComponent : gameObject.getComponents()) {
-                if (fixed) {
-                    scriptComponent.onFixedUpdate();
-                }
                 scriptComponent.onUpdate();
             }
             gameObject.transform.update();
@@ -146,34 +138,16 @@ public class GamePanel extends JPanel implements Runnable {
         return hierarchy.stream().map(transform -> transform.gameObject).collect(Collectors.toList());
     }
 
-    public int getMonitorRefreshRate() {
-        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        GraphicsDevice[] gs = ge.getScreenDevices();
-
-        int lowest = Integer.MAX_VALUE;
-
-        for (GraphicsDevice g : gs) {
-            DisplayMode dm = g.getDisplayMode();
-
-            int refreshRate = dm.getRefreshRate();
-            if (refreshRate == DisplayMode.REFRESH_RATE_UNKNOWN) {
-                System.out.println("Unknown rate");
-            }
-
-            if (refreshRate < lowest) {
-                lowest = refreshRate;
-            }
+    public static int getFrameRate() {
+        if (frameRate == 0) {
+            frameRate = Screen.getMonitorRefreshRate();
         }
-
-        return lowest;
-    }
-
-    public int getFrameRate() {
         return frameRate;
     }
 
     public void setFrameRate(int frameRate) {
-        this.frameRate = Math.max(frameRate, -1);
+        if (isRunning()) throw new IllegalStateException("The framerate may not be changed during runtime!");
+        GamePanel.frameRate = Math.max(frameRate, -1);
     }
 
     @Override

@@ -9,9 +9,10 @@ import java.util.List;
 
 public final class Transform {
 
+    //TODO: Add pivot/anchor points
+
     public final GameObject gameObject;
 
-    private final Vector2D localPosition;
     public final Vector2D position;
     public final Vector2D velocity;
 
@@ -22,7 +23,6 @@ public final class Transform {
 
     public Transform(GameObject gameObject) {
         this.gameObject = gameObject;
-        this.localPosition = Vector2D.zero();
         this.position = Vector2D.zero();
         this.velocity = Vector2D.zero();
         this.size = new Rectangle(50, 50);
@@ -30,7 +30,7 @@ public final class Transform {
     }
 
     public void update() {
-        calcWorldPosition();
+
     }
 
     public Transform[] getChildren() {
@@ -55,22 +55,29 @@ public final class Transform {
         }
         children.add(transform);
         transform.parent = this;
+
+        //Translate transform's position to its local position
+        transform.position.subtract(this.position);
     }
 
     public void removeChild(Transform transform) {
-        if (transform.parent == this) {
-            children.remove(transform);
-            transform.parent = null;
-        }
+        if (transform.parent != this) return;
+        children.remove(transform);
+        Vector2D worldPos = getWorldPosition();
+        transform.parent = null;
+
+        //Translate transform's position to its world position
+        transform.position.set(worldPos);
     }
 
     public void applyForce(Vector2D force) {
         this.velocity.add(force);
     }
 
-    private void calcWorldPosition() {
-        if (parent == null) return;
-        position.set(localPosition);
-        position.add(parent.position);
+    public Vector2D getWorldPosition() {
+        if (parent == null) {
+            return position.clone();
+        }
+        return parent.getWorldPosition().add(position);
     }
 }
