@@ -1,8 +1,7 @@
-package design_and_implementation.h8_9.a2_paddle_game.engine.system;
+package design_and_implementation.h8_9.a2_paddle_game.engine;
 
 import java.net.URL;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public final class ResourceManager {

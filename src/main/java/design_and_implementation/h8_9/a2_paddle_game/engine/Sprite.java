@@ -1,4 +1,4 @@
-package design_and_implementation.h8_9.a2_paddle_game.engine.system;
+package design_and_implementation.h8_9.a2_paddle_game.engine;
 
 import design_and_implementation.h8_9.a2_paddle_game.engine.ui.TextureType;
 import org.jetbrains.annotations.NotNull;

@@ -1,20 +1,15 @@
-package design_and_implementation.h8_9.a2_paddle_game.engine.system;
+package design_and_implementation.h8_9.a2_paddle_game.engine;
 
 import design_and_implementation.h8_9.a2_paddle_game.engine.models.Component;
 import design_and_implementation.h8_9.a2_paddle_game.engine.components.SpriteRenderer;
 import design_and_implementation.h8_9.a2_paddle_game.engine.components.Transform;
-import design_and_implementation.h8_9.a2_paddle_game.engine.controls.Input;
 import design_and_implementation.h8_9.a2_paddle_game.engine.models.GameObject;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class GamePanel extends JPanel implements Runnable {
@@ -46,6 +41,8 @@ public class GamePanel extends JPanel implements Runnable {
         this.time = new Time();
         this.input = new Input();
         this.addKeyListener(input);
+        this.addMouseListener(input);
+        this.addMouseMotionListener(input);
         this.setFocusable(true);
 
         setFrameRate(-1);
@@ -102,19 +99,23 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     private void update() {
-        float elapsed = Time.getTime() - Time.lastFixedFrameTime;
-        if (elapsed >= 1000) {
-            fixedUpdate();
-        }
-        time.calcDeltaTime();
-
-        List<GameObject> orderedHierarchy = getOrderedHierarchy();
-
-        for (GameObject gameObject : orderedHierarchy) {
-            for (Component scriptComponent : gameObject.getComponents()) {
-                scriptComponent.onUpdate();
+        synchronized (input) {
+            float elapsed = Time.getTime() - Time.lastFixedFrameTime;
+            if (elapsed >= 1000) {
+                fixedUpdate();
             }
-            gameObject.transform.update();
+            time.calcDeltaTime();
+
+            List<GameObject> orderedHierarchy = getOrderedHierarchy();
+
+            for (GameObject gameObject : orderedHierarchy) {
+                for (Component scriptComponent : gameObject.getComponents()) {
+                    scriptComponent.onUpdate();
+                }
+                gameObject.transform.update();
+            }
+
+            input.onFrameFinish();
         }
     }
 
@@ -122,7 +123,7 @@ public class GamePanel extends JPanel implements Runnable {
         List<GameObject> hierarchyRoot = new ArrayList<>();
 
         for (GameObject gameObject : gameObjects) {
-            if (gameObject.transform.parent != null) continue;
+            if (gameObject.transform.getParent() != null) continue;
             hierarchyRoot.add(gameObject);
         }
 

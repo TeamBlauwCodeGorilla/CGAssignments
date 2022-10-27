@@ -1,9 +1,6 @@
-package design_and_implementation.h8_9.a2_paddle_game.engine.system;
+package design_and_implementation.h8_9.a2_paddle_game.engine;
 
 import design_and_implementation.h8_9.a2_paddle_game.engine.models.GameObject;
-import design_and_implementation.h8_9.a2_paddle_game.engine.system.ResourceManager;
-import design_and_implementation.h8_9.a2_paddle_game.engine.system.Sprite;
-import design_and_implementation.h8_9.a2_paddle_game.engine.system.GamePanel;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -16,14 +13,14 @@ public class Engine {
     private final JFrame window;
     private final GamePanel gamePanel;
 
-    public Engine(Dimension resolution) {
-        this(resolution.width, resolution.height);
+    public Engine(@NotNull String title, Dimension resolution) {
+        this(title, resolution.width, resolution.height);
     }
-    public Engine(int width, int height) {
+    public Engine(@NotNull String title, int width, int height) {
         window = new JFrame();
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setResizable(false);
-        window.setTitle("Paddle Game - Breakout");
+        window.setTitle(title);
 
         gamePanel = new GamePanel(width, height);
         window.add(gamePanel);

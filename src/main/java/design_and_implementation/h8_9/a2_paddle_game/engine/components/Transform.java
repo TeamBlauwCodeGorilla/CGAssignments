@@ -18,7 +18,7 @@ public final class Transform {
 
     public final Rectangle size;
 
-    public Transform parent;
+    private Transform parent;
     private final List<Transform> children;
 
     public Transform(GameObject gameObject) {
@@ -47,6 +47,10 @@ public final class Transform {
         for (Transform child : children) {
             child.getAllChildren(out);
         }
+    }
+
+    public Transform getParent() {
+        return parent;
     }
 
     public void addChild(Transform transform) {

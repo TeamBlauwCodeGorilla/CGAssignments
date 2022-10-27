@@ -2,7 +2,7 @@ package design_and_implementation.h8_9.a2_paddle_game.engine.components;
 
 import design_and_implementation.h8_9.a2_paddle_game.engine.math.Vector2D;
 import design_and_implementation.h8_9.a2_paddle_game.engine.models.Component;
-import design_and_implementation.h8_9.a2_paddle_game.engine.system.Sprite;
+import design_and_implementation.h8_9.a2_paddle_game.engine.Sprite;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,7 +26,8 @@ public final class SpriteRenderer extends Component {
                 graphics.setColor(color);
                 graphics.fillRect(position.x, position.y, transform.size.width, transform.size.height);
             } else {
-                graphics.drawImage(image, position.x, position.y, (int) sprite.getWidth(), (int) sprite.getHeight(), null);
+                //graphics.drawImage(image, position.x, position.y, (int) sprite.getWidth(), (int) sprite.getHeight(), null);
+                graphics.drawImage(image, position.x, position.y, (int) gameObject.transform.size.getWidth(), (int) gameObject.transform.size.getHeight(), null);
             }
         } else {
             graphics.setColor(color);

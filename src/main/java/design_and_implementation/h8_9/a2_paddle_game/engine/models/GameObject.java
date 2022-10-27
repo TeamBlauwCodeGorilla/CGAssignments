@@ -1,6 +1,6 @@
 package design_and_implementation.h8_9.a2_paddle_game.engine.models;
 
-import design_and_implementation.h8_9.a2_paddle_game.engine.system.Engine;
+import design_and_implementation.h8_9.a2_paddle_game.engine.Engine;
 import design_and_implementation.h8_9.a2_paddle_game.engine.components.Transform;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
