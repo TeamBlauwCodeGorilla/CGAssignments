@@ -28,7 +28,7 @@ public class Main {
         spriteRenderer.sprite = engine.createSprite(url); //Create and assign a sprite using the url to the sprite renderer. (No sprite/image would show a blank square)
 
         //Assign a custom component to the player (A class that extends Component.java)
-        playerObject.addComponent(PlayerMovement.class);
+        PlayerMovement playerMovement = playerObject.addComponent(PlayerMovement.class);
         //Add the player to the world.
         engine.getGameObjects().add(playerObject);
 
@@ -47,6 +47,7 @@ public class Main {
 
         //Adds the npc as a child of the player. (So the npc moves along with the player's movement)
         playerObject.transform.addChild(npc.transform);
+        playerMovement.optionalChild = npc.transform;
 
         //Start running the engine. Aka starts the game.
         engine.run();

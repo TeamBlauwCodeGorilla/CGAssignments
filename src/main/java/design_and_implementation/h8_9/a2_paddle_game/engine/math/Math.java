@@ -6,21 +6,16 @@ public final class Math {
 
     }
 
-    public static boolean isPointInsideAABB(Vector2D point, BoundingBox bounds) {
+    public static boolean isPointInsideAABB(Vector2D point, Vector2D minPos, Vector2D maxPos) {
         return (
-                point.x >= bounds.minPos.x &&
-                        point.x <= bounds.maxPos.x &&
-                        point.y >= bounds.minPos.y &&
-                        point.y <= bounds.maxPos.x
+                point.x >= minPos.x &&
+                        point.x <= maxPos.x &&
+                        point.y >= minPos.y &&
+                        point.y <= maxPos.x
         );
     }
 
-    public static boolean isAABBInsideAABB(BoundingBox boundsA, BoundingBox boundsB) {
-        Vector2D minPosA = boundsA.minPos;
-        Vector2D maxPosA = boundsA.maxPos;
-        Vector2D minPosB = boundsB.minPos;
-        Vector2D maxPosB = boundsB.maxPos;
-
+    public static boolean isAABBInsideAABB(Vector2D minPosA, Vector2D maxPosA, Vector2D minPosB, Vector2D maxPosB) {
         return (minPosA.x <= maxPosB.x &&
                 maxPosA.x >= minPosB.x &&
                 minPosA.y <= maxPosB.y &&

@@ -66,8 +66,9 @@ public final class Transform {
 
     public void removeChild(Transform transform) {
         if (transform.parent != this) return;
+        Vector2D worldPos = transform.getWorldPosition();
+
         children.remove(transform);
-        Vector2D worldPos = getWorldPosition();
         transform.parent = null;
 
         //Translate transform's position to its world position

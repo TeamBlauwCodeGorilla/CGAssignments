@@ -1,11 +1,11 @@
 package design_and_implementation.h8_9.a2_paddle_game.breakout;
 
-import design_and_implementation.h8_9.a2_paddle_game.engine.Input;
-import design_and_implementation.h8_9.a2_paddle_game.engine.components.Transform;
-import design_and_implementation.h8_9.a2_paddle_game.engine.models.Component;
 import design_and_implementation.h8_9.a2_paddle_game.engine.Console;
 import design_and_implementation.h8_9.a2_paddle_game.engine.Engine;
+import design_and_implementation.h8_9.a2_paddle_game.engine.Input;
 import design_and_implementation.h8_9.a2_paddle_game.engine.Time;
+import design_and_implementation.h8_9.a2_paddle_game.engine.components.Transform;
+import design_and_implementation.h8_9.a2_paddle_game.engine.models.Component;
 
 public class PlayerMovement extends Component {
 

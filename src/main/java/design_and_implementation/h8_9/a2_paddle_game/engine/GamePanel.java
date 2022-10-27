@@ -45,7 +45,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.addMouseMotionListener(input);
         this.setFocusable(true);
 
-        setFrameRate(-1);
+        setFrameRate(0);
     }
 
     public void startGameThread() {
@@ -171,7 +171,7 @@ public class GamePanel extends JPanel implements Runnable {
                 .forEachOrdered(renderer -> {
                     BufferedImage layer = layers.getOrDefault(renderer.sortingLayer, layers.get(""));
                     if (layer == null) {
-                        Console.warn("Couldn't draw object '"+renderer.gameObject+"' on layer '"+renderer.sortingLayer+"'");
+                        Console.warn("Couldn't draw object '"+renderer.gameObject+"' on layer '"+renderer.sortingLayer+"' because the layer does not exist!");
                         return;
                     }
                     renderer.render(layer.createGraphics());
