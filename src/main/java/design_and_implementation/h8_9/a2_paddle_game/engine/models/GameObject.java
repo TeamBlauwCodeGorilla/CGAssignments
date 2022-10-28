@@ -136,6 +136,17 @@ public final class GameObject implements Comparable<GameObject> {
     }
 
     @Override
+    public String toString() {
+        return "GameObject{" +
+                "name='" + name + '\'' +
+                ", tag='" + tag + '\'' +
+                ", enabled=" + enabled +
+                ", transform=" + transform +
+                ", components=" + components +
+                '}';
+    }
+
+    @Override
     public int compareTo(@NotNull GameObject o) {
         return 0;
     }

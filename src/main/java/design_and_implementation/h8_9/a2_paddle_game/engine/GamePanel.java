@@ -109,8 +109,8 @@ public class GamePanel extends JPanel implements Runnable {
             List<GameObject> orderedHierarchy = getOrderedHierarchy();
 
             for (GameObject gameObject : orderedHierarchy) {
-                for (Component scriptComponent : gameObject.getComponents()) {
-                    scriptComponent.onUpdate();
+                for (Component component : gameObject.getComponents()) {
+                    component.onUpdate();
                 }
                 gameObject.transform.update();
             }
@@ -133,7 +133,6 @@ public class GamePanel extends JPanel implements Runnable {
     public List<GameObject> getOrderedHierarchy() {
         List<Transform> hierarchy = new ArrayList<>();
         for (GameObject root : getHierarchyRoot()) {
-            hierarchy.add(root.transform);
             root.transform.getAllChildren(hierarchy);
         }
         return hierarchy.stream().map(transform -> transform.gameObject).collect(Collectors.toList());

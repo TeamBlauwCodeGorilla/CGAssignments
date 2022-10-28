@@ -38,9 +38,10 @@ public class Main {
 
         //Assign a sprite renderer to the npc, so we can see the npc on the screen.
         spriteRenderer = npc.addComponent(SpriteRenderer.class);
-        url = Main.class.getResource("/assets/npc.png"); //Get the url to the correct image from the 'resources' folder.
-        spriteRenderer.sprite = engine.createSprite(url); //Create and assign a sprite using the url to the sprite renderer. (No sprite/image would show a blank square)
-        spriteRenderer.orderInLayer = 1;
+        spriteRenderer.color = Color.GREEN;
+        //url = Main.class.getResource("/assets/npc.png"); //Get the url to the correct image from the 'resources' folder.
+        //spriteRenderer.sprite = engine.createSprite(url); //Create and assign a sprite using the url to the sprite renderer. (No sprite/image would show a blank square)
+        spriteRenderer.orderInLayer = -1;
 
         //Add the npc to the world.
         engine.getGameObjects().add(npc);
