@@ -6,23 +6,30 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
+import java.util.IllegalFormatWidthException;
 import java.util.List;
 
 public class Engine {
 
+    private static Engine instance;
     private final JFrame window;
     private final GamePanel gamePanel;
 
-    public Engine(@NotNull String title, Dimension resolution) {
-        this(title, resolution.width, resolution.height);
+    public static Engine getInstance() {
+        return instance;
     }
+
     public Engine(@NotNull String title, int width, int height) {
+        this(title, new Dimension(width, height));
+    }
+    public Engine(@NotNull String title, Dimension resolution) {
+        this.instance = this;
         window = new JFrame();
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setResizable(false);
         window.setTitle(title);
 
-        gamePanel = new GamePanel(width, height);
+        gamePanel = new GamePanel(resolution);
         window.add(gamePanel);
 
         window.pack();
@@ -31,23 +38,44 @@ public class Engine {
         window.setVisible(true);
     }
 
+    public Dimension getWindowDimension() {
+        return gamePanel.getDimension();
+    }
+
     public void run() {
         gamePanel.startGameThread();
     }
 
+    /**
+     * Gets the list of all gameObjects. Modifying this list will reflect directly inside your game.
+     * @return the list of all gameObjects.
+     */
     public List<GameObject> getGameObjects() {
         return gamePanel.gameObjects;
+    }
+
+    /**
+     * Gets a copy of the list of gameObjects. Ordered from top to bottom, with all the children listed after their parent.
+     * @return an ordered list of gameObjects.
+     */
+    public List<GameObject> getOrderedHierarchy() {
+        return gamePanel.getOrderedHierarchy();
     }
 
     public static int getFrameRate() {
         return GamePanel.getFrameRate();
     }
 
+    /**
+     * Changes the framerate at which your game runs.
+     * @param frameRate the framerate at which your game runs. -1 for unlimited. 0 for VSync. 1+ for a framerate of your choice.
+     * @throws IllegalStateException when this method is called during runtime
+     */
     public void setFrameRate(int frameRate) {
         gamePanel.setFrameRate(frameRate);
     }
 
-    public @NotNull Sprite createSprite(@NotNull URL url) {
+    public @NotNull Sprite getSprite(@NotNull URL url) {
         return ResourceManager.getInstance().getSprite(url);
     }
 

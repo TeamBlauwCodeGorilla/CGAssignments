@@ -7,24 +7,24 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class Transform {
+public final class RectTransform {
 
     //TODO: Add pivot/anchor points
 
     public final GameObject gameObject;
 
     public final Vector2D position;
-    public final Vector2D velocity;
 
+    public final Vector2D pivot = Vector2D.half();
+    public final Vector2D anchor = Vector2D.zero();
     public final Rectangle size;
 
-    private Transform parent;
-    private final List<Transform> children;
+    private RectTransform parent;
+    private final List<RectTransform> children;
 
-    public Transform(GameObject gameObject) {
+    public RectTransform(GameObject gameObject) {
         this.gameObject = gameObject;
         this.position = Vector2D.zero();
-        this.velocity = Vector2D.zero();
         this.size = new Rectangle(50, 50);
         this.children = new ArrayList<>();
     }
@@ -33,27 +33,27 @@ public final class Transform {
 
     }
 
-    public Transform[] getChildren() {
-        return children.toArray(Transform[]::new);
+    public RectTransform[] getChildren() {
+        return children.toArray(RectTransform[]::new);
     }
 
-    public void getAllChildren(List<Transform> out) {
+    public void getAllChildren(List<RectTransform> out) {
         if (out == null) {
             out = new ArrayList<>();
         }
         out.add(this);
 
-        Transform[] children = getChildren();
-        for (Transform child : children) {
+        RectTransform[] children = getChildren();
+        for (RectTransform child : children) {
             child.getAllChildren(out);
         }
     }
 
-    public Transform getParent() {
+    public RectTransform getParent() {
         return parent;
     }
 
-    public void addChild(Transform transform) {
+    public void addChild(RectTransform transform) {
         if (transform.parent != null) {
             transform.parent.removeChild(transform);
         }
@@ -64,7 +64,7 @@ public final class Transform {
         transform.position.subtract(this.position);
     }
 
-    public void removeChild(Transform transform) {
+    public void removeChild(RectTransform transform) {
         if (transform.parent != this) return;
         Vector2D worldPos = transform.getWorldPosition();
 
@@ -73,10 +73,6 @@ public final class Transform {
 
         //Translate transform's position to its world position
         transform.position.set(worldPos);
-    }
-
-    public void applyForce(Vector2D force) {
-        this.velocity.add(force);
     }
 
     public Vector2D getWorldPosition() {

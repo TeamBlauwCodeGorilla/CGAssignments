@@ -1,7 +1,7 @@
 package design_and_implementation.h8_9.a2_paddle_game.engine.models;
 
 import design_and_implementation.h8_9.a2_paddle_game.engine.Engine;
-import design_and_implementation.h8_9.a2_paddle_game.engine.components.Transform;
+import design_and_implementation.h8_9.a2_paddle_game.engine.components.RectTransform;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -12,23 +12,34 @@ import java.util.List;
 
 public final class GameObject implements Comparable<GameObject> {
 
-    static final GameObject EMPTY = new GameObject("gameObject");
-    public static GameObject empty() {
-        return new GameObject("gameObject");
+    static final GameObject EMPTY = new GameObject(false, "gameObject", null);
+    public static GameObject empty(@Nullable RectTransform parent) {
+        return new GameObject(true, "gameObject", parent);
     }
 
     private String name;
     private String tag;
     private boolean enabled;
 
-    public final Transform transform;
+    public final RectTransform transform;
 
     private final List<Component> components;
 
     public GameObject(@NotNull String name, Component... components) {
+        this(name, null, components);
+    }
+
+    public GameObject(@NotNull String name, @Nullable RectTransform parent, Component... components) {
+        this(true, name, parent, components);
+    }
+
+    private GameObject(boolean add2Hierarchy, @NotNull String name, @Nullable RectTransform parent, Component... components) {
         this.name = name;
         this.enabled = true;
-        this.transform = new Transform(this);
+        this.transform = new RectTransform(this);
+        if (parent != null) {
+            parent.addChild(this.transform);
+        }
         this.components = new ArrayList<>(List.of(components));
     }
 

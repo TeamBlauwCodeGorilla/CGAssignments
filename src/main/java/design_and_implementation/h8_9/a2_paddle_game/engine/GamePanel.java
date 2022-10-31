@@ -2,7 +2,7 @@ package design_and_implementation.h8_9.a2_paddle_game.engine;
 
 import design_and_implementation.h8_9.a2_paddle_game.engine.models.Component;
 import design_and_implementation.h8_9.a2_paddle_game.engine.components.SpriteRenderer;
-import design_and_implementation.h8_9.a2_paddle_game.engine.components.Transform;
+import design_and_implementation.h8_9.a2_paddle_game.engine.components.RectTransform;
 import design_and_implementation.h8_9.a2_paddle_game.engine.models.GameObject;
 
 import javax.swing.*;
@@ -13,7 +13,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class GamePanel extends JPanel implements Runnable {
-    final Dimension screenResolution;
+    final Dimension dimension;
 
     final Time time;
 
@@ -32,9 +32,9 @@ public class GamePanel extends JPanel implements Runnable {
 
     public final List<GameObject> gameObjects = new ArrayList<>();
 
-    public GamePanel(int width, int height) {
-        screenResolution = new Dimension(width, height);
-        this.setPreferredSize(screenResolution);
+    public GamePanel(Dimension resolution) {
+        this.dimension = resolution;
+        this.setPreferredSize(dimension);
         this.setBackground(Color.GRAY);
         this.setDoubleBuffered(true);
 
@@ -131,7 +131,7 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public List<GameObject> getOrderedHierarchy() {
-        List<Transform> hierarchy = new ArrayList<>();
+        List<RectTransform> hierarchy = new ArrayList<>();
         for (GameObject root : getHierarchyRoot()) {
             root.transform.getAllChildren(hierarchy);
         }
@@ -148,6 +148,10 @@ public class GamePanel extends JPanel implements Runnable {
     public void setFrameRate(int frameRate) {
         if (isRunning()) throw new IllegalStateException("The framerate may not be changed during runtime!");
         GamePanel.frameRate = Math.max(frameRate, -1);
+    }
+
+    public Dimension getDimension() {
+        return dimension;
     }
 
     @Override

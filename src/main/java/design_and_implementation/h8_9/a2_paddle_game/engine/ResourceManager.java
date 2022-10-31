@@ -16,6 +16,11 @@ public final class ResourceManager {
 
     private ResourceManager() { }
 
+    /**
+     * Loads a sprite by its url. Or reuses the old sprite of the same url that was cached.
+     * @param url the url of which sprite to retrieve.
+     * @return the newly loaded or cached sprite.
+     */
     public Sprite getSprite(URL url) {
         Sprite sprite = spriteCache.get(url);
         if (sprite != null) {

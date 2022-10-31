@@ -12,13 +12,17 @@ public class Vector2D implements Cloneable {
         return new Vector2D(1, 1);
     }
 
-    public int x, y;
+    public static Vector2D half() {
+        return new Vector2D(0.5f, 0.5f);
+    }
+
+    public double x, y;
 
     public Vector2D() {
         this(0, 0);
     }
 
-    public Vector2D(int x, int y) {
+    public Vector2D(double x, double y) {
         this.x = x;
         this.y = y;
     }
@@ -28,7 +32,7 @@ public class Vector2D implements Cloneable {
         this.y = other.y;
     }
 
-    public Vector2D set(int x, int y) {
+    public Vector2D set(double x, double y) {
         this.x = x;
         this.y = y;
         return this;
@@ -38,9 +42,9 @@ public class Vector2D implements Cloneable {
         return set(vec.x, vec.y);
     }
 
-    public Vector2D add(int x, int y) {
-        int newX = this.x + x;
-        int newY = this.y + y;
+    public Vector2D add(double x, double y) {
+        double newX = this.x + x;
+        double newY = this.y + y;
         this.set(newX, newY);
         return this;
     }
@@ -49,9 +53,9 @@ public class Vector2D implements Cloneable {
         return add(vec.x, vec.y);
     }
 
-    public Vector2D subtract(int x, int y) {
-        int newX = this.x - x;
-        int newY = this.y - y;
+    public Vector2D subtract(double x, double y) {
+        double newX = this.x - x;
+        double newY = this.y - y;
         this.set(newX, newY);
         return this;
     }
@@ -60,9 +64,9 @@ public class Vector2D implements Cloneable {
         return subtract(vec.x, vec.y);
     }
 
-    public Vector2D multiply(int x, int y) {
-        int newX = this.x * x;
-        int newY = this.y * y;
+    public Vector2D multiply(double x, double y) {
+        double newX = this.x * x;
+        double newY = this.y * y;
         this.set(newX, newY);
         return this;
     }
@@ -71,15 +75,33 @@ public class Vector2D implements Cloneable {
         return multiply(vec.x, vec.y);
     }
 
-    public Vector2D divide(int x, int y) {
-        int newX = this.x / x;
-        int newY = this.y / y;
+    public Vector2D divide(double x, double y) {
+        double newX = this.x / x;
+        double newY = this.y / y;
         this.set(newX, newY);
         return this;
     }
 
     public Vector2D divide(@NotNull Vector2D vec) {
         return divide(vec.x, vec.y);
+    }
+
+    public double magnitude() {
+        return Math.sqrt(x * x + y * y);
+    }
+
+    public void setMagnitude(double mag) {
+        double oldMag = magnitude();
+        this.x *= mag / oldMag;
+        this.y *= mag / oldMag;
+    }
+
+    public int getX() {
+        return (int) x;
+    }
+
+    public int getY() {
+        return (int) y;
     }
 
     public Vector2D clone() {

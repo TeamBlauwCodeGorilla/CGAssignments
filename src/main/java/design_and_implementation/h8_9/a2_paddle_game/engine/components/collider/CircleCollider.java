@@ -16,10 +16,10 @@ public final class CircleCollider extends Component implements Collider {
         if (other instanceof BoxCollider otherBox) {
             return mesh.intersects(otherBox.mesh);
         } else if (other instanceof CircleCollider otherCircle) {
-            int x1 = transform.position.x;
-            int y1 = transform.position.y;
-            int x2 = otherCircle.transform.position.x;
-            int y2 = otherCircle.transform.position.y;
+            int x1 = transform.position.getX();
+            int y1 = transform.position.getY();
+            int x2 = otherCircle.transform.position.getX();
+            int y2 = otherCircle.transform.position.getY();
             float distSqrt = (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
 
             double r1 = mesh.getWidth();

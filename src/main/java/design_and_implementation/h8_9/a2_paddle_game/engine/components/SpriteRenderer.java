@@ -24,13 +24,13 @@ public final class SpriteRenderer extends Component {
             BufferedImage image = sprite.getImage();
             if (image == null) {
                 graphics.setColor(color);
-                graphics.fillRect(position.x, position.y, transform.size.width, transform.size.height);
+                graphics.fillRect(position.getX(), position.getY(), transform.size.width, transform.size.height);
             } else {
-                graphics.drawImage(image, position.x, position.y, (int) gameObject.transform.size.getWidth(), (int) gameObject.transform.size.getHeight(), null);
+                graphics.drawImage(image, position.getX(), position.getY(), (int) gameObject.transform.size.getWidth(), (int) gameObject.transform.size.getHeight(), null);
             }
         } else {
             graphics.setColor(color);
-            graphics.fillRect(position.x, position.y, transform.size.width, transform.size.height);
+            graphics.fillRect(position.getX(), position.getY(), transform.size.width, transform.size.height);
         }
     }
 }

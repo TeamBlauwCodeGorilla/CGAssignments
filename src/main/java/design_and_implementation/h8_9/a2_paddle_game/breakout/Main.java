@@ -1,7 +1,10 @@
 package design_and_implementation.h8_9.a2_paddle_game.breakout;
 
 import design_and_implementation.h8_9.a2_paddle_game.engine.Engine;
+import design_and_implementation.h8_9.a2_paddle_game.engine.components.Rigidbody2D;
 import design_and_implementation.h8_9.a2_paddle_game.engine.components.SpriteRenderer;
+import design_and_implementation.h8_9.a2_paddle_game.engine.components.collider.BoxCollider;
+import design_and_implementation.h8_9.a2_paddle_game.engine.components.collider.CircleCollider;
 import design_and_implementation.h8_9.a2_paddle_game.engine.models.GameObject;
 import design_and_implementation.h8_9.a2_paddle_game.engine.Screen;
 
@@ -25,7 +28,7 @@ public class Main {
         //Assign a sprite renderer to the player, so we can see the player on the screen.
         SpriteRenderer spriteRenderer = playerObject.addComponent(SpriteRenderer.class);
         URL url = Main.class.getResource("/assets/player.png"); //Get the url to the correct image from the 'resources' folder.
-        spriteRenderer.sprite = engine.createSprite(url); //Create and assign a sprite using the url to the sprite renderer. (No sprite/image would show a blank square)
+        spriteRenderer.sprite = engine.getSprite(url); //Create and assign a sprite using the url to the sprite renderer. (No sprite/image would show a blank square)
 
         //Assign a custom component to the player (A class that extends Component.java)
         PlayerMovement playerMovement = playerObject.addComponent(PlayerMovement.class);
@@ -36,6 +39,8 @@ public class Main {
         GameObject npc = new GameObject("NPC");
         npc.transform.position.set(150, 150);
 
+        npc.addComponent(CircleCollider.class);
+        npc.addComponent(Rigidbody2D.class);
         //Assign a sprite renderer to the npc, so we can see the npc on the screen.
         spriteRenderer = npc.addComponent(SpriteRenderer.class);
         spriteRenderer.color = Color.GREEN;
@@ -48,7 +53,7 @@ public class Main {
 
         //Adds the npc as a child of the player. (So the npc moves along with the player's movement)
         playerObject.transform.addChild(npc.transform);
-        playerMovement.optionalChild = npc.transform;
+        playerMovement.ball = npc.transform;
 
         //Start running the engine. Aka starts the game.
         engine.run();
