@@ -13,13 +13,13 @@ public class PlayerMovement extends Component {
     public RectTransform ball;
 
     @Override
-    protected void onEnable() {
+    public void onEnable() {
         Dimension dimension = Engine.getInstance().getWindowDimension();
         transform.position.set((int) (dimension.getWidth()/2), (int) (dimension.getHeight() * 0.9));
     }
 
     @Override
-    protected void onUpdate() {
+    public void onUpdate() {
         double horizontal = Input.getAxis("Horizontal") * speed * Time.getDeltaTime();
         double vertical = Input.getAxis("Vertical") * speed * Time.getDeltaTime();
         transform.position.add((int) horizontal, (int) vertical);
@@ -36,7 +36,7 @@ public class PlayerMovement extends Component {
     }
 
     @Override
-    protected void onFixedUpdate() {
+    public void onFixedUpdate() {
         Console.debug("Position: "+transform.position);
         Console.debug(String.format("FR: %s | FPS: %s", Engine.getFrameRate(), Time.getFPS()));
     }

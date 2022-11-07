@@ -17,26 +17,26 @@ public abstract class Component {
     /**
      * Executes upon creation of this Component.
      */
-    protected void onInitialize() { }
+    public void onInitialize() { }
 
     /**
      * Executes upon enabling of this GameObject.
      */
-    protected void onEnable() { }
+    public void onEnable() { }
 
     /**
      * Executes upon disabling of this GameObject.
      */
-    protected void onDisable() { }
+    public void onDisable() { }
 
     /**
      * Executes every frame.
      */
-    protected void onUpdate() { }
+    public void onUpdate() { }
 
     /**
      * Executes every fixed frame (Once a second).
      */
-    protected void onFixedUpdate() { }
+    public void onFixedUpdate() { }
 
 }

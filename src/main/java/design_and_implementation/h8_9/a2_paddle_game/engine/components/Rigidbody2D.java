@@ -21,7 +21,7 @@ public final class Rigidbody2D extends Component {
     public CollisionDetection collisionDetection = CollisionDetection.DISCRETE;
 
     @Override
-    protected void onUpdate() {
+    public void onUpdate() {
         transform.position.add(velocity);
         velocity.subtract(linearDrag, linearDrag);
     }
